@@ -2,12 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import './App.css';
 // import CameraFeed from './camfeed'
+import VideoStream from './components/VideoStream'
 
 function App() {
     const [username, setUsername] = useState("")
     const [image, setImage] = useState(null)
     const [file, setFile] = useState(null)
     const [users, setUsers] = useState([])
+    const [fileList, setFileList] = useState(null)
+    const [camera, toggleCamera] = useState(false)
+
+    const toggleCam = () => {
+        toggleCamera(!camera)
+    }
 
     const sendImage = () => {
         console.log(image)
@@ -39,6 +46,13 @@ function App() {
             setImage(e.target.result)
         };
     }
+
+    const getFiles = async () => {
+        await axios.get('http://localhost:3003/files').then(res => {
+            setFileList(res.data)
+        })
+    }
+
     // const sendData = () => {
     //     const resp = new Promise((resolve, reject) => {
     //         axios.post('http://localhost:3003/users', {
@@ -95,12 +109,44 @@ function App() {
                 accept="image/*" 
             /> 
             <button 
-                type="submit" 
+                type="button" 
                 disabled={username === "" || image === null} 
                 onClick={sendImage}
             >
                 Send Image
             </button>
+            <button
+                type="button"
+                onClick={getFiles}
+            >
+                Get Files
+            </button>
+            <button
+                type="button"
+                onClick={toggleCam}
+            >
+                Toggle Camera
+            </button>
+            {
+                camera ?
+                <VideoStream 
+                    id="video"
+                    rearCamera={ true }
+                    onCapture={ data => console.log(data)}
+                /> : ""
+            }
+            {
+                fileList ? 
+                fileList.map(file => {
+                    return (
+                        <div key={file.key}>
+                            <p>{file.Key}</p>
+                            <a href={file.ObjectURL} target="_blank" rel="noopener noreferrer">Git</a>
+                        </div>
+                    )
+                })
+                : ""
+            }
         </div>
     );
 }

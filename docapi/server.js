@@ -26,6 +26,9 @@ app.post('/users', db.addUser)
 app.post('/uploadText', cos.uploadText)
 app.post('/uploadImage', cos.uploadImage)
 
+app.get('/files', cos.getFiles)
+app.get('/files/:itemName', cos.getItemURL)
+
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
 })
