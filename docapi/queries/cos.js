@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+dotenv.config()
+
 const myCOS = require('ibm-cos-sdk')
 var multer = require('multer');
 var multerS3 = require('multer-s3');
