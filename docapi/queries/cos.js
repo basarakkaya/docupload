@@ -94,7 +94,7 @@ const uploadImage = (_req, _res) => {
                 console.log(file);
             }
         })
-    }).single('imgfile')
+    }).array('imgfiles', 2)
 
     uploader(_req, _res, function(error) {
         if(error) _res.status(400)

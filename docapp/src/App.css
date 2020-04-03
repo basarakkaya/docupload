@@ -1,38 +1,51 @@
-.App {
-  text-align: center;
+body {
+    margin: 0;
+    padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* change the style of autofilled inputs */
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px #212121 inset!important;
+    -webkit-text-fill-color: #fff;
+    font-family: 'Montserrat';
+    transition: background-color 0.3s ease;
+}
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 50px #333333 inset!important;
+    -webkit-text-fill-color: #4edfff;
+    font-family: 'Montserrat';
+    transition: background-color 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* to hide increase/decrease arrows of number type input */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* scrollbar styling for webkit browsers only */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
 }
-
-.App-link {
-  color: #61dafb;
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #80808080; 
+    border-radius: 4px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+::-webkit-scrollbar-thumb {
+    background: #080808; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #080808ab; 
+}
+::-webkit-scrollbar-corner {
+    display: none;
 }
