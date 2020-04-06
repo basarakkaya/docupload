@@ -28,7 +28,7 @@ export default function ListFiles() {
     const classes = useStyles()
 
     const fetchFiles = async () => {
-        await axios.get('http://localhost:3003/files').then(res => {
+        await axios.get(`${process.env.REACT_APP_APIENDPOINT}/files`).then(res => {
             setFileList(res.data)
         })
     }

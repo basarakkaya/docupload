@@ -54,7 +54,7 @@ export default function NewUser() {
         data.append("uname", username)
 
         const resp = new Promise((resolve, reject) => {
-            axios.post('http://localhost:3003/uploadImage', data).then(res => {
+            axios.post(`${process.env.REACT_APP_APIENDPOINT}/uploadImage`, data).then(res => {
                 console.log(res.data)
                 resolve(res.data)
             }).catch(err => {
