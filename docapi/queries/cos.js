@@ -10,7 +10,7 @@ var { cos_reader_config, cos_writer_config } = require('../config/cos')
 var cosReader = new myCOS.S3(cos_reader_config);
 var cosWriter = new myCOS.S3(cos_writer_config);
 
-const bucketName = "docbucket-bakkaya"
+const bucketName = process.env.IBM_COS_BUCKETNAME
 
 const fetchURL = itemKey => {
     return cosReader.getSignedUrl('getObject', {

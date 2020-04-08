@@ -12,6 +12,7 @@ run `npm install` and `npm start` consquently, within both `docapi` and `docapp`
 ## Setting Environment Variables
 
 > ### Example `docapi/.env`
+> IBM_COS_BUCKETNAME=<< ibm cos bucket name >>
 > IBM_COS_ENDPOINT=<< public endpoint of bucket under Buckets>Configuration>Endpoints>Public >>
 > IBM_COS_APIKEYID_WRITER=<< "apikey" under "Service Credentials" >>
 > IBM_COS_APIKEYID_READER=<< "apikey" under "Service Credentials" >>
@@ -44,6 +45,7 @@ You need to create `manifest.yml` files under both `docapi` and `docapp` folders
 >   space: dev
 >   command: npm start
 >   env:
+>     IBM_COS_BUCKETNAME=<< ibm cos bucket name >>        
 >     IBM_COS_ENDPOINT=<< public endpoint of bucket under Buckets>Configuration>Endpoints>Public >>
 >     IBM_COS_APIKEYID_WRITER=<< "apikey" under "Service Credentials" >>
 >     IBM_COS_APIKEYID_READER=<< "apikey" under "Service Credentials" >>
