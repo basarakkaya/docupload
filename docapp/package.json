@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "postinstall": "react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
