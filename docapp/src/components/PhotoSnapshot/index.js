@@ -94,13 +94,11 @@ export default function PhotoSnapshot(props) {
                 <DialogContent dividers>
                     <Webcam
                         audio={false}
-                        height={720}
+                        height='100%'
                         ref={webcamRef}
                         screenshotFormat="image/png"
-                        width={1280}
+                        width='100%'
                         videoConstraints={{
-                            width: 1280,
-                            height: 720,
                             facingMode: "environment"
                         }}
                     />
