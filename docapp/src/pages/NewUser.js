@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 import PhotoSnapshot from '../components/PhotoSnapshot';
+import ImageManipulate from '../components/ImageManipulate/ImageManipulate';
+import { resizeImage } from '../util/Image';
 
 import {
   Typography,
@@ -30,6 +32,11 @@ export default function NewUser() {
   const [file_1, setFile_1] = useState(null);
   const [file_2, setFile_2] = useState(null);
 
+  const [preview1, setPreview1] = useState('');
+  const [preview2, setPreview2] = useState('');
+
+  const [imageManipulateOpts, setImageManipulateOpts] = useState({});
+
   const [showCamera, toggleCamera] = useState(0);
 
   const classes = useStyles();
@@ -37,15 +44,15 @@ export default function NewUser() {
   const resetForm = () => {
     setUsername('');
     setFile_1(null);
+    setPreview1('');
     setFile_2(null);
+    setPreview2('');
     toggleCamera(0);
   };
 
   const sendImage = () => {
     const file_1_name = `${username}_file1.${file_1.file.type.split('/')[1]}`,
       file_2_name = `${username}_file2.${file_2.file.type.split('/')[1]}`;
-    // file_1_name = `file1.png`,
-    // file_2_name = `file2.png`
 
     const data = new FormData();
     data.append('imgfiles', file_1.file, file_1_name);
@@ -68,56 +75,60 @@ export default function NewUser() {
     resetForm();
   };
 
-  const inputfile = (event, inputNo) => {
-    const _file = event.target.files[0];
+  const setImage = async (image, inputNo, displayName) => {
+    let blob = await fetch(image).then((res) => res.blob());
 
-    let inputObj = {
-      file: _file,
-      displayName: _file.name,
-    };
-
-    var reader = new FileReader();
-
-    reader.readAsDataURL(_file);
-    reader.onload = function (e) {
-      // browser completed reading file - display it
-      inputObj = {
-        ...inputObj,
-        previewUrl: e.target.result,
-      };
-    };
+    let file = new File([blob], displayName, { type: blob.type });
 
     switch (inputNo) {
       case 1:
-        setFile_1(inputObj);
+        setFile_1({
+          file,
+          displayName,
+        });
+        setPreview1(image);
         break;
       case 2:
-        setFile_2(inputObj);
+        setFile_2({
+          file,
+          displayName,
+        });
+        setPreview2(image);
         break;
       default:
         break;
     }
   };
 
-  const onCapture = (dataUrl, dataBlob, inputNo) => {
-    // setImagePreviewUrl(dataUrl)
-    // setFile(dataBlob)
-    const inputObj = {
-      file: dataBlob,
-      previewUrl: dataUrl,
-      displayName: 'Kamera Kullanıldı',
-    };
+  const sendToManipulator = async (file, inputNo, displayName) => {
+    const resized = await resizeImage(file);
 
-    switch (inputNo) {
-      case 1:
-        setFile_1(inputObj);
-        break;
-      case 2:
-        setFile_2(inputObj);
-        break;
-      default:
-        break;
-    }
+    const reader = new FileReader();
+
+    reader.readAsDataURL(resized);
+    reader.onload = function (e) {
+      setImageManipulateOpts({
+        image: e.target.result,
+        onComplete: (manipulatedImage) => {
+          setImage(manipulatedImage, inputNo, displayName || file.name);
+
+          setImageManipulateOpts({});
+        },
+        onCancel: () => {
+          setImageManipulateOpts({});
+        },
+      });
+    };
+  };
+
+  const inputfile = async (event, inputNo) => {
+    const _file = event.target.files[0];
+
+    await sendToManipulator(_file, inputNo);
+  };
+
+  const onCapture = async (dataUrl, dataBlob, inputNo) => {
+    await sendToManipulator(dataBlob, inputNo, 'Kamera Kullanıldı');
 
     toggleCamera(0);
   };
@@ -181,6 +192,7 @@ export default function NewUser() {
         <Typography variant='body1'>
           {file_1 ? file_1.displayName : 'Dosya Ekli Değil'}
         </Typography>
+        <img src={preview1} />
         <input
           accept='image/png, image/jpeg, application/pdf'
           className={classes.input}
@@ -209,6 +221,7 @@ export default function NewUser() {
         <Typography variant='body1'>
           {file_2 ? file_2.displayName : 'Dosya Ekli Değil'}
         </Typography>
+        <img src={preview2} />
         <input
           accept='image/png, image/jpeg, application/pdf'
           className={classes.input}
@@ -250,6 +263,7 @@ export default function NewUser() {
       ) : (
         ''
       )}
+      <ImageManipulate options={imageManipulateOpts} />
     </>
   );
 }
